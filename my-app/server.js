@@ -117,7 +117,18 @@ app.post('/upload', upload.single('video'), (req, res) => {
 
         pythonProcess.on('close', (code) => {
             console.log(`Python script exited with code ${code}`);
-            console.log(out)
+            console.log(out);
+
+            // // Read the locally downloaded video
+            // const downloadedVideoPath = path.join(__dirname, 'out_test.mp4');
+            // const downloadedVideoBuffer = fs.readFileSync(downloadedVideoPath);
+
+            // processedVideoUrl = `data:video/mp4;base64,${downloadedVideoBuffer.toString('base64')}`;
+
+            // // Save the downloaded video
+            // const downloadedVideoSavePath = path.join('uploads', 'out_test.mp4');
+            // fs.writeFileSync(downloadedVideoSavePath, downloadedVideoBuffer);
+            
             res.json({ outputText: out });
         });
     }
