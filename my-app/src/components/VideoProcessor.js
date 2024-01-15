@@ -99,18 +99,27 @@
 
 // export default VideoProcessor;
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player';
 
 const VideoProcessor = () => {
   const [videoFile, setVideoFile] = useState(null);
-  //const [processedVideoUrl, setProcessedVideoUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
   const [outputText, setOutputText] = useState('');
   const [showPlayer, setShowPlayer] = useState(false); // State to control player visibility
 
+  useEffect(() => {
+    if (showPlayer) {
+      import('./out_test_compressed.mp4').then((module) => {
+        setVideoUrl(module.default);
+      });
+    }
+  }, [showPlayer]);
+
   const handleFileChange = (e) => {
     setVideoFile(e.target.files[0]);
+    setVideoUrl('');
   };
 
   const handleUpload = async () => {
@@ -124,6 +133,8 @@ const VideoProcessor = () => {
       
       console.log("test", response.data.outputText);
       setOutputText(response.data.outputText);
+      console.log("test", response.data.videoUrl);
+      setVideoUrl(response.data.videoUrl);
 
       setShowPlayer(true);
       console.log(response);
@@ -149,7 +160,7 @@ const VideoProcessor = () => {
   return (
     <div>
       <label>
-        Upload Video:
+        Upload Video
         <input type="file" accept=".mp4" onChange={handleFileChange} />
       </label>
       <br />
@@ -157,7 +168,7 @@ const VideoProcessor = () => {
       <br />
       {showPlayer && (
         <>
-          {/* <ReactPlayer url={'highway.mp4'} controls /> */}
+          <video controls autostart autoPlay src={videoUrl} type="video/mp4" />
           <p>{outputText}</p>
         </>
       )}
